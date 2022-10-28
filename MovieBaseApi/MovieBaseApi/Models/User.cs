@@ -6,10 +6,7 @@
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public DateTime RegisterDate { get; set; }
-        public int MovieRatingId { get; set; }
-        public int ActorRatingId { get; set; }
-        public IEnumerable<ActorRating>? ActorRatings { get; set; }
-        public IEnumerable<MovieRating>? MovieRatings { get; set; } 
-
+        public ActorRating? ActorRating { get; set; }
+        public MovieRating? MovieRating { get; set; }
     }
 }

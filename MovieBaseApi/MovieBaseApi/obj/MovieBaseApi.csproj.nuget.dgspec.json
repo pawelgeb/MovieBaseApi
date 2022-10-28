@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\AMC\\Projects\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi.csproj": {}
+    "C:\\Projects\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi.csproj": {}
   },
   "projects": {
-    "C:\\AMC\\Projects\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi.csproj": {
+    "C:\\Projects\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\AMC\\Projects\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi.csproj",
+        "projectUniqueName": "C:\\Projects\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi.csproj",
         "projectName": "MovieBaseApi",
-        "projectPath": "C:\\AMC\\Projects\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi.csproj",
-        "packagesPath": "C:\\Users\\Paweł\\.nuget\\packages\\",
-        "outputPath": "C:\\AMC\\Projects\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\obj\\",
+        "projectPath": "C:\\Projects\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi.csproj",
+        "packagesPath": "C:\\Users\\user3\\.nuget\\packages\\",
+        "outputPath": "C:\\Projects\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\MovieBaseApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Paweł\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\user3\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -75,7 +75,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -87,7 +88,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }
