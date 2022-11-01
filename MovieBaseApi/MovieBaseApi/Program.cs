@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieBaseApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-var dataBaseChose = "SQLL";
+var dataBaseChose = "SQL";
 
 // Add services to the container.
 
