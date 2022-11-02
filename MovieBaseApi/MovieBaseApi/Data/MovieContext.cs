@@ -13,7 +13,6 @@ namespace MovieBaseApi.Data
         {
 
         }
-
         public virtual DbSet<Actor>? Actors { get; set; }
         public virtual DbSet<ActorRating>? ActorRatings { get; set; }
         public virtual DbSet<Director>? Directors { get; set; }
@@ -22,21 +21,16 @@ namespace MovieBaseApi.Data
         public virtual DbSet<ScreenWriter>? ScreenWriters { get; set; }
         public virtual DbSet<User>? Users { get; set; }
         public virtual DbSet<ActorMovie>? ActorMovie { get; set; }
-
-
+        public virtual DbSet<Contact>? Contacts { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseNpgsql("Host=localhost;Database=postgresMovie;Username=postgres;Password=mysecretpassword");
             }
-
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
-
             modelBuilder.Entity<Actor>(entity =>
             {
                 entity.ToTable("actors", "moviebase");
@@ -55,8 +49,7 @@ namespace MovieBaseApi.Data
                 .HasColumnName("movie_id");
 
             });
-
-            modelBuilder.Entity<ActorRating>(entity =>
+              modelBuilder.Entity<ActorRating>(entity =>
             {
                 entity.ToTable("actor_ratings", "moviebase");
                 entity.Property(e => e.ActorRatingId)
@@ -65,23 +58,11 @@ namespace MovieBaseApi.Data
                 entity.Property(e => e.RatingDate)
                 .HasColumnName("rating_date");
                 entity.Property(e => e.RatingValue)
-                .HasColumnName("rating_value");
-                entity.Property(e => e.UserId)
                 .HasColumnName("user_id");
                 entity.Property(e => e.ActorId)
                 .HasColumnName("actor_id");
 
-                //entity.HasOne(d => d.User)
-                //.WithOne(p => p.ActorRating)
-                //.HasForeignKey<ActorRating>(ad => ad.IdUser)
-                //.HasConstraintName("action_rating_user_id_fkey");
-
-                //entity.HasOne<Actor>(s => s.Actor)
-                //.WithMany(g => g.ActorRatings)
-                //.HasForeignKey(s => s.IdActor);
-
             });
-
             modelBuilder.Entity<Director>(entity =>
             {
                 entity.ToTable("directors", "moviebase");
@@ -98,7 +79,6 @@ namespace MovieBaseApi.Data
                 .HasColumnName("nationality");
 
             });
-
             modelBuilder.Entity<Movie>(entity =>
             {
                 entity.ToTable("movies", "moviebase");
@@ -116,16 +96,7 @@ namespace MovieBaseApi.Data
                 entity.Property(e => e.DirectorId)
                 .HasColumnName("Director_id");
 
-                //entity.HasOne<Director>(s => s.Director)
-                //.WithMany(g => g.Movies)
-                //.HasForeignKey(s => s.DirectorId);
-
-                //entity.HasOne<ScreenWriter>(s => s.ScreenWriter)
-                //.WithMany(g => g.Movies)
-                //.HasForeignKey(s => s.ScreeWriterId);
-
             });
-
             modelBuilder.Entity<MovieRating>(entity =>
             {
                 entity.ToTable("movie_ratings", "moviebase");
@@ -136,14 +107,8 @@ namespace MovieBaseApi.Data
                 .HasColumnName("rating_date");
                 entity.Property(e => e.MovieId)
                 .HasColumnName("movie_id");
-                entity.Property(e => e.UserId)
-                .HasColumnName("user_id");
 
-                //entity.HasOne<Movie>(s => s.Movie)
-                //.WithMany(g => g.MovieRatings)
-                //.HasForeignKey(s => s.IdMovie);
             });
-
             modelBuilder.Entity<ScreenWriter>(entity =>
             {
                 entity.ToTable("screen_writers", "moviebase");
@@ -162,9 +127,9 @@ namespace MovieBaseApi.Data
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("users", "moviebase");
-                entity.Property(e => e.Id)
+                entity.Property(e => e.UserId)
                 .ValueGeneratedOnAdd()
-                .HasColumnName("id");
+                .HasColumnName("user_id");
                 entity.Property(e => e.FirstName)
                 .HasColumnName("first_name");
                 entity.Property(e => e.LastName)
@@ -173,21 +138,24 @@ namespace MovieBaseApi.Data
                 .HasColumnName("register_data");
 
             });
-
-            modelBuilder.Entity<ActorMovie>().HasKey(sc => new { sc.ActorId, sc.MovieId });
-
-            modelBuilder.Entity<ActorMovie>()
-            .HasOne<Movie>(sc => sc.Movie)
-            .WithMany(s => s.ActorMovie)
-             .HasForeignKey(sc => sc.ActorId);
-
-
-            modelBuilder.Entity<ActorMovie>()
-            .HasOne<Actor>(sc => sc.Actor)
-            .WithMany(s => s.ActorMovie)
-            .HasForeignKey(sc => sc.MovieId);
+            modelBuilder.Entity<Contact>(entity =>
+            {
+                entity.ToTable("contact", "moviebase");
+                entity.Property(e => e.UserId)
+                .HasColumnName("contact_id");
+                entity.Property(e => e.Email)
+                .HasColumnName("email");
+                entity.Property(e => e.PhoneNumber)
+                .HasColumnName("phone_number");
+                entity.Property(e => e.UserId)
+                .HasColumnName("user_id");
+            });
+            modelBuilder.Entity<ActorMovie>(entity =>
+            {
+                entity.ToTable("actor_movie", "moviebase");
+                entity.HasKey(sc => new { sc.ActorId, sc.MovieId });
+            });
         }
-        //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
 

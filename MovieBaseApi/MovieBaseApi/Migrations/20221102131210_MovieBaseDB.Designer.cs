@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MovieBaseApi.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    [Migration("20221101221503_MovieBaseDB")]
+    [Migration("20221102131210_MovieBaseDB")]
     partial class MovieBaseDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,7 +70,7 @@ namespace MovieBaseApi.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("ActorMovie");
+                    b.ToTable("actor_movie", "moviebase");
                 });
 
             modelBuilder.Entity("MovieBaseApi.Models.ActorRating", b =>
@@ -92,11 +92,10 @@ namespace MovieBaseApi.Migrations
 
                     b.Property<int>("RatingValue")
                         .HasColumnType("integer")
-                        .HasColumnName("rating_value");
+                        .HasColumnName("user_id");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
+                        .HasColumnType("integer");
 
                     b.HasKey("ActorRatingId");
 
@@ -106,6 +105,34 @@ namespace MovieBaseApi.Migrations
                         .IsUnique();
 
                     b.ToTable("actor_ratings", "moviebase");
+                });
+
+            modelBuilder.Entity("MovieBaseApi.Models.Contact", b =>
+                {
+                    b.Property<int>("ContactId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ContactId"));
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text")
+                        .HasColumnName("email");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("phone_number");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("ContactId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("contact", "moviebase");
                 });
 
             modelBuilder.Entity("MovieBaseApi.Models.Director", b =>
@@ -197,8 +224,7 @@ namespace MovieBaseApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
+                        .HasColumnType("integer");
 
                     b.HasKey("MovieRatingId");
 
@@ -242,12 +268,12 @@ namespace MovieBaseApi.Migrations
 
             modelBuilder.Entity("MovieBaseApi.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnName("user_id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("FirstName")
                         .HasColumnType("text")
@@ -261,20 +287,20 @@ namespace MovieBaseApi.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("register_data");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("users", "moviebase");
                 });
 
             modelBuilder.Entity("MovieBaseApi.Models.ActorMovie", b =>
                 {
-                    b.HasOne("MovieBaseApi.Models.Movie", "Movie")
+                    b.HasOne("MovieBaseApi.Models.Actor", "Actor")
                         .WithMany("ActorMovie")
                         .HasForeignKey("ActorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieBaseApi.Models.Actor", "Actor")
+                    b.HasOne("MovieBaseApi.Models.Movie", "Movie")
                         .WithMany("ActorMovie")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -300,6 +326,17 @@ namespace MovieBaseApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Actor");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MovieBaseApi.Models.Contact", b =>
+                {
+                    b.HasOne("MovieBaseApi.Models.User", "User")
+                        .WithOne("Contact")
+                        .HasForeignKey("MovieBaseApi.Models.Contact", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -369,6 +406,8 @@ namespace MovieBaseApi.Migrations
             modelBuilder.Entity("MovieBaseApi.Models.User", b =>
                 {
                     b.Navigation("ActorRating");
+
+                    b.Navigation("Contact");
 
                     b.Navigation("MovieRating");
                 });

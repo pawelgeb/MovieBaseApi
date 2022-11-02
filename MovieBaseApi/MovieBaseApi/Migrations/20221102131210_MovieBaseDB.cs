@@ -70,7 +70,7 @@ namespace MovieBaseApi.Migrations
                 schema: "moviebase",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
+                    user_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     first_name = table.Column<string>(type: "text", nullable: true),
                     last_name = table.Column<string>(type: "text", nullable: true),
@@ -78,7 +78,7 @@ namespace MovieBaseApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_users", x => x.id);
+                    table.PrimaryKey("PK_users", x => x.user_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -120,10 +120,10 @@ namespace MovieBaseApi.Migrations
                 {
                     actor_rating_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    rating_value = table.Column<int>(type: "integer", nullable: false),
-                    rating_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     user_id = table.Column<int>(type: "integer", nullable: false),
-                    actor_id = table.Column<int>(type: "integer", nullable: false)
+                    rating_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    actor_id = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -136,16 +136,40 @@ namespace MovieBaseApi.Migrations
                         principalColumn: "actor_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_actor_ratings_users_user_id",
-                        column: x => x.user_id,
+                        name: "FK_actor_ratings_users_UserId",
+                        column: x => x.UserId,
                         principalSchema: "moviebase",
                         principalTable: "users",
-                        principalColumn: "id",
+                        principalColumn: "user_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ActorMovie",
+                name: "contact",
+                schema: "moviebase",
+                columns: table => new
+                {
+                    ContactId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    email = table.Column<string>(type: "text", nullable: true),
+                    phone_number = table.Column<string>(type: "text", nullable: true),
+                    user_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_contact", x => x.ContactId);
+                    table.ForeignKey(
+                        name: "FK_contact_users_user_id",
+                        column: x => x.user_id,
+                        principalSchema: "moviebase",
+                        principalTable: "users",
+                        principalColumn: "user_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "actor_movie",
+                schema: "moviebase",
                 columns: table => new
                 {
                     ActorId = table.Column<int>(type: "integer", nullable: false),
@@ -153,17 +177,17 @@ namespace MovieBaseApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ActorMovie", x => new { x.ActorId, x.MovieId });
+                    table.PrimaryKey("PK_actor_movie", x => new { x.ActorId, x.MovieId });
                     table.ForeignKey(
-                        name: "FK_ActorMovie_actors_MovieId",
-                        column: x => x.MovieId,
+                        name: "FK_actor_movie_actors_ActorId",
+                        column: x => x.ActorId,
                         principalSchema: "moviebase",
                         principalTable: "actors",
                         principalColumn: "actor_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ActorMovie_movies_ActorId",
-                        column: x => x.ActorId,
+                        name: "FK_actor_movie_movies_MovieId",
+                        column: x => x.MovieId,
                         principalSchema: "moviebase",
                         principalTable: "movies",
                         principalColumn: "movie_id",
@@ -179,8 +203,8 @@ namespace MovieBaseApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RatingValue = table.Column<int>(type: "integer", nullable: false),
                     rating_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    user_id = table.Column<int>(type: "integer", nullable: false),
-                    movie_id = table.Column<int>(type: "integer", nullable: false)
+                    movie_id = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -193,13 +217,19 @@ namespace MovieBaseApi.Migrations
                         principalColumn: "movie_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_movie_ratings_users_user_id",
-                        column: x => x.user_id,
+                        name: "FK_movie_ratings_users_UserId",
+                        column: x => x.UserId,
                         principalSchema: "moviebase",
                         principalTable: "users",
-                        principalColumn: "id",
+                        principalColumn: "user_id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_actor_movie_MovieId",
+                schema: "moviebase",
+                table: "actor_movie",
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_actor_ratings_actor_id",
@@ -208,16 +238,18 @@ namespace MovieBaseApi.Migrations
                 column: "actor_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_actor_ratings_user_id",
+                name: "IX_actor_ratings_UserId",
                 schema: "moviebase",
                 table: "actor_ratings",
-                column: "user_id",
+                column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ActorMovie_MovieId",
-                table: "ActorMovie",
-                column: "MovieId");
+                name: "IX_contact_user_id",
+                schema: "moviebase",
+                table: "contact",
+                column: "user_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_movie_ratings_movie_id",
@@ -226,10 +258,10 @@ namespace MovieBaseApi.Migrations
                 column: "movie_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_movie_ratings_user_id",
+                name: "IX_movie_ratings_UserId",
                 schema: "moviebase",
                 table: "movie_ratings",
-                column: "user_id",
+                column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -248,11 +280,16 @@ namespace MovieBaseApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "actor_movie",
+                schema: "moviebase");
+
+            migrationBuilder.DropTable(
                 name: "actor_ratings",
                 schema: "moviebase");
 
             migrationBuilder.DropTable(
-                name: "ActorMovie");
+                name: "contact",
+                schema: "moviebase");
 
             migrationBuilder.DropTable(
                 name: "movie_ratings",
